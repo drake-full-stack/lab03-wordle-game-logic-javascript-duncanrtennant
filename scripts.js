@@ -151,7 +151,17 @@ function submitGuess() {
 
     logDebug(`word ${guess} successfully guessed on target word ${TARGET_WORD}`,'success');
 
-    //checkGuess(guess,tiles);
+    const result=checkGuess(guess,tiles);
+    for (i=0;i<5;i++){
+        tiles[i].classList.remove('filled');
+        if(result[i]==`correct`){
+            tiles[i].classList.add('correct');
+        } else if(result[i]==`present`){
+            tiles[i].classList.add('present');
+        } else{
+            tiles[i].classList.add('absent');
+        }
+    }
 
     currentRow++;
     currentTile = 0;
@@ -167,8 +177,43 @@ function submitGuess() {
 }
 
 // TODO: Implement checkGuess function (the hardest part!)
-// function checkGuess(guess, tiles) {
-//     // Your code here!
-//     // Remember: handle duplicate letters correctly
-//     // Return the result array
-// }
+function checkGuess(guess, tiles) {
+    const target = TARGET_WORD.split(``);
+    const guessArray=guess.split(``);
+    const result = [`absent`,`absent`,`absent`,`absent`,`absent`];
+    logDebug(`target array: ${target}`);
+    logDebug(`guessed array: ${guessArray}`);
+
+    // Finding correct position matches
+    const correctPositions=[];
+    for (let i=0;i<5;i++) {
+        if(target[i]===guessArray[i]){
+            correctPositions.push(i);
+            result[i]=`correct`;
+            target[i]=null;
+            guessArray[i]=null;
+        }
+    }
+    logDebug(`correct positions located: ${correctPositions}`);
+
+    // Finding incorrect position matches
+    const wrongPlace=[];
+    for (let i=0;i<5;i++) {
+        if(guessArray[i] !== null){
+            for (let j=0;j<5;j++){
+                if(guessArray[i]===target[j]){
+                    wrongPlace.push(i);
+                    result[i]=`present`;
+                    target[j]=null;
+                }
+            }
+        }
+    }
+    logDebug(`incorrect positions located: ${wrongPlace}`)
+
+    logDebug(`input response: ${result}`,'info');
+    return result;
+    // Your code here!
+    // Remember: handle duplicate letters correctly
+    // Return the result array
+}
