@@ -102,9 +102,9 @@ function addLetter(letter) {
     }
 
     const row=rows[currentRow];
-    const tileRow=row.querySelectorAll('.tile');
-    tileRow[currentTile].textContent=letter;
-    tileRow[currentTile].classList.add('filled');
+    const tiles=row.querySelectorAll('.tile');
+    tiles[currentTile].textContent=letter;
+    tiles[currentTile].classList.add('filled');
     logDebug(`letter ${letter} successfully added at position ${currentTile}`,'success');
     currentTile++;
     logDebug(`Current word: `+getCurrentWord());
@@ -123,10 +123,10 @@ function deleteLetter() {
     currentTile--;
 
     const row=rows[currentRow];
-    const tileRow=row.querySelectorAll('.tile');
-    const tileContent=tileRow[currentTile].textContent
-    tileRow[currentTile].textContent=``;
-    tileRow[currentTile].classList.remove('filled');
+    const tiles=row.querySelectorAll('.tile');
+    const tileContent=tiles[currentTile].textContent
+    tiles[currentTile].textContent=``;
+    tiles[currentTile].classList.remove('filled');
     logDebug(`letter ${tileContent} successfully removed at position ${currentTile}`,'success');
     logDebug(`Current word: `+getCurrentWord());
 
@@ -134,9 +134,37 @@ function deleteLetter() {
 }
 
 // TODO: Implement submitGuess function
-// function submitGuess() {
-//     // Your code here!
-// }
+function submitGuess() {
+
+    if(currentTile !== 5){
+        alert("Please enter 5 letters!");
+        return;
+    }
+
+    const row=rows[currentRow];
+    const tiles=row.querySelectorAll('.tile');
+    let guess=``;
+
+    tiles.forEach(tile => {
+        guess += tile.textContent;
+    })
+
+    logDebug(`word ${guess} successfully guessed on target word ${TARGET_WORD}`,'success');
+
+    //checkGuess(guess,tiles);
+
+    currentRow++;
+    currentTile = 0;
+
+    if (guess === TARGET_WORD){
+        gameOver = true;
+        setTimeout(() => alert(`Congratulations! You won!`), 500);
+    }   else if (currentRow >=6) {
+        gameOver = true;
+        setTimeout(() => alert(`You lose! Better luck next time.`), 500);
+    }
+    // Your code here!
+}
 
 // TODO: Implement checkGuess function (the hardest part!)
 // function checkGuess(guess, tiles) {
